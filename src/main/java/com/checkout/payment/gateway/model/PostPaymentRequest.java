@@ -2,11 +2,12 @@ package com.checkout.payment.gateway.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
+import static java.lang.String.format;
 
 public class PostPaymentRequest implements Serializable {
 
   @JsonProperty("card_number")
-  private long cardNumber;
+  private String cardNumber;
   @JsonProperty("expiry_month")
   private int expiryMonth;
   @JsonProperty("expiry_year")
@@ -15,11 +16,11 @@ public class PostPaymentRequest implements Serializable {
   private int amount;
   private int cvv;
 
-  public long getCardNumber() {
+  public String getCardNumber() {
     return cardNumber;
   }
 
-  public void setCardNumber(long cardNumber) {
+  public void setCardNumber(String cardNumber) {
     this.cardNumber = cardNumber;
   }
 
@@ -65,7 +66,7 @@ public class PostPaymentRequest implements Serializable {
 
   @JsonProperty("expiry_date")
   public String getExpiryDate() {
-    return String.format("%d/%d", expiryMonth, expiryYear);
+    return format("%02d/%4d", expiryMonth, expiryYear);
   }
 
   @Override
