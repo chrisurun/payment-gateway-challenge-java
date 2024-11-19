@@ -1,40 +1,48 @@
 package com.checkout.payment.gateway.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class AcquirerRequest {
 
-  private String card_number;
-  private String expiry_date;
+  @JsonProperty("card_number")
+  private String cardNumber;
+
+  @JsonProperty("expiry_date")
+  private String expiryDate;
+
   private String currency;
+
   private int amount;
-  private int cvv;
+
+  private String cvv;
 
   public AcquirerRequest(
       String cardNumber,
       String expiryDate,
       String currency,
       int amount,
-      int cvv) {
-    this.card_number = cardNumber;
-    this.expiry_date = expiryDate;
+      String cvv) {
+    this.cardNumber = cardNumber;
+    this.expiryDate = expiryDate;
     this.currency = currency;
     this.amount = amount;
     this.cvv = cvv;
   }
 
   public String getCardNumber() {
-    return card_number;
+    return cardNumber;
   }
 
   public void setCardNumber(String cardNumber) {
-    this.card_number = cardNumber;
+    this.cardNumber = cardNumber;
   }
 
   public String getExpiryDate() {
-    return expiry_date;
+    return expiryDate;
   }
 
   public void setExpiryDate(String expiryDate) {
-    this.expiry_date = expiryDate;
+    this.expiryDate = expiryDate;
   }
 
   public String getCurrency() {
@@ -53,11 +61,11 @@ public class AcquirerRequest {
     this.amount = amount;
   }
 
-  public int getCvv() {
+  public String getCvv() {
     return cvv;
   }
 
-  public void setCvv(int cvv) {
+  public void setCvv(String cvv) {
     this.cvv = cvv;
   }
 }

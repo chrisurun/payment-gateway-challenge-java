@@ -6,15 +6,12 @@ import static java.lang.String.format;
 
 public class PostPaymentRequest implements Serializable {
 
-  @JsonProperty("card_number")
   private String cardNumber;
-  @JsonProperty("expiry_month")
   private int expiryMonth;
-  @JsonProperty("expiry_year")
   private int expiryYear;
   private String currency;
   private int amount;
-  private int cvv;
+  private String cvv;
 
   public String getCardNumber() {
     return cardNumber;
@@ -56,11 +53,11 @@ public class PostPaymentRequest implements Serializable {
     this.amount = amount;
   }
 
-  public int getCvv() {
+  public String getCvv() {
     return cvv;
   }
 
-  public void setCvv(int cvv) {
+  public void setCvv(String cvv) {
     this.cvv = cvv;
   }
 

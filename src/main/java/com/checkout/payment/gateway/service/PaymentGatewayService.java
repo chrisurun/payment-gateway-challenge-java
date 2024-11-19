@@ -2,6 +2,7 @@ package com.checkout.payment.gateway.service;
 
 import com.checkout.payment.gateway.exception.EventProcessingException;
 import com.checkout.payment.gateway.client.AcquirerClient;
+import com.checkout.payment.gateway.exception.MissingEntityException;
 import com.checkout.payment.gateway.model.AcquirerRequest;
 import com.checkout.payment.gateway.model.AcquirerResponse;
 import com.checkout.payment.gateway.model.PostPaymentRequest;
@@ -14,7 +15,9 @@ import org.springframework.stereotype.Service;
 
 import static com.checkout.payment.gateway.enums.PaymentStatus.AUTHORIZED;
 import static com.checkout.payment.gateway.enums.PaymentStatus.DECLINED;
+import static java.lang.Integer.parseInt;
 import static java.lang.String.valueOf;
+import static java.util.UUID.randomUUID;
 
 @Service
 public class PaymentGatewayService {
@@ -32,21 +35,22 @@ public class PaymentGatewayService {
 
   public PostPaymentResponse getPaymentById(UUID id) {
     LOG.debug("Requesting access to to payment with ID {}", id);
-    return paymentsRepository.get(id).orElseThrow(() -> new EventProcessingException("Invalid ID"));
+    return paymentsRepository.get(id).orElseThrow(() -> new MissingEntityException("Invalid ID"));
   }
 
   public PostPaymentResponse processPayment(PostPaymentRequest paymentRequest) {
-    // At this point we should have already validated the request
-    var paymentId = UUID.randomUUID();
+    var paymentId = randomUUID();
+    var acquirerResponse = new AcquirerResponse();
     try {
-      var acquirerResponse = acquirerClient.processPayment(mapToAcquirerRequest(paymentRequest));
-      var postPaymentResponse = mapToPostPaymentResponse(paymentId, paymentRequest, acquirerResponse);
-      paymentsRepository.add(postPaymentResponse);
-      return postPaymentResponse;
+      acquirerResponse = acquirerClient.processPayment(mapToAcquirerRequest(paymentRequest));
     } catch (Exception e) {
-      LOG.error("Error while processing payment", e);
+      LOG.error("Error while processing upstream payment", e);
       throw new EventProcessingException("Error while processing payment");
     }
+    var postPaymentResponse = mapToPostPaymentResponse(paymentId, paymentRequest, acquirerResponse);
+    paymentsRepository.add(postPaymentResponse);
+    return postPaymentResponse;
+
   }
 
   private AcquirerRequest mapToAcquirerRequest(PostPaymentRequest paymentRequest) {
@@ -67,9 +71,10 @@ public class PaymentGatewayService {
     response.setId(paymentId);
     response.setStatus(acquirerResponse.getAuthorized() ? AUTHORIZED : DECLINED);
     response.setCardNumberLastFour(getLastFour(paymentRequest.getCardNumber()));
+    response.setCurrency(paymentRequest.getCurrency());
     var date = paymentRequest.getExpiryDate().split("/");
-    response.setExpiryMonth(Integer.parseInt(date[0]));
-    response.setExpiryYear(2000 + Integer.parseInt(date[1]));
+    response.setExpiryMonth(parseInt(date[0]));
+    response.setExpiryYear(parseInt(date[1]));
     return response;
   }
 
