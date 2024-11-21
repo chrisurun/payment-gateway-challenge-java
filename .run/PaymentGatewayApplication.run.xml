@@ -1,0 +1,15 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="PaymentGatewayApplication" type="Application" factoryName="Application" nameIsGenerated="true">
+    <option name="MAIN_CLASS_NAME" value="com.checkout.payment.gateway.PaymentGatewayApplication" />
+    <module name="payment-gateway-challenge-java.main" />
+    <extension name="coverage">
+      <pattern>
+        <option name="PATTERN" value="com.checkout.payment.gateway.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+    </extension>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

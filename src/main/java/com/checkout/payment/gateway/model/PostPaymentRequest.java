@@ -1,7 +1,7 @@
 package com.checkout.payment.gateway.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
+
 import static java.lang.String.format;
 
 public class PostPaymentRequest implements Serializable {
@@ -61,7 +61,6 @@ public class PostPaymentRequest implements Serializable {
     this.cvv = cvv;
   }
 
-  @JsonProperty("expiry_date")
   public String getExpiryDate() {
     return format("%02d/%4d", expiryMonth, expiryYear);
   }

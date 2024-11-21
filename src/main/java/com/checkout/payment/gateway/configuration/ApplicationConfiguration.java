@@ -2,6 +2,7 @@ package com.checkout.payment.gateway.configuration;
 
 import java.time.Duration;
 import com.checkout.payment.gateway.client.AcquirerClient;
+import com.checkout.payment.gateway.client.GatewayClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
@@ -17,7 +18,6 @@ public class ApplicationConfiguration {
   @Autowired
   private Environment env;
 
-
   @Bean
   public RestTemplate restTemplate(RestTemplateBuilder builder) {
     return builder
@@ -31,5 +31,12 @@ public class ApplicationConfiguration {
     return new AcquirerClient(
         env.getProperty("acquirer.baseUri"),
         env.getProperty("acquirer.port"));
+  }
+
+  @Bean
+  public GatewayClient gatewayClient() {
+    return new GatewayClient(
+        env.getProperty("gateway.baseUri"),
+        env.getProperty("gateway.port"));
   }
 }

@@ -17,6 +17,9 @@ public class CommonExceptionHandler {
 
   private static final Logger LOG = LoggerFactory.getLogger(CommonExceptionHandler.class);
 
+  public static String PAYMENT_NOT_FOUND = "Payment not found";
+  public static String INVALID_REQUEST = "Invalid request";
+
   @ExceptionHandler(EventProcessingException.class)
   public ResponseEntity<ErrorResponse> handleException(EventProcessingException ex) {
     LOG.error("An exception happened", ex);
@@ -39,7 +42,7 @@ public class CommonExceptionHandler {
   public ResponseEntity<ErrorsResponse> handleException(ValidationException ex) {
     LOG.info("Invalid user request", ex);
     return new ResponseEntity<>(new ErrorsResponse(
-        "Invalid request",
+        INVALID_REQUEST,
         ex.getFieldErrors()),
         BAD_REQUEST);
   }

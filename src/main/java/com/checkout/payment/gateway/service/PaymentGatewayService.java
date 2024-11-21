@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import static com.checkout.payment.gateway.enums.PaymentStatus.AUTHORIZED;
 import static com.checkout.payment.gateway.enums.PaymentStatus.DECLINED;
+import static com.checkout.payment.gateway.exception.CommonExceptionHandler.PAYMENT_NOT_FOUND;
 import static java.lang.Integer.parseInt;
 import static java.lang.String.valueOf;
 import static java.util.UUID.randomUUID;
@@ -35,7 +36,7 @@ public class PaymentGatewayService {
 
   public PostPaymentResponse getPaymentById(UUID id) {
     LOG.debug("Requesting access to to payment with ID {}", id);
-    return paymentsRepository.get(id).orElseThrow(() -> new MissingEntityException("Invalid ID"));
+    return paymentsRepository.get(id).orElseThrow(() -> new MissingEntityException(PAYMENT_NOT_FOUND));
   }
 
   public PostPaymentResponse processPayment(PostPaymentRequest paymentRequest) {
@@ -72,6 +73,7 @@ public class PaymentGatewayService {
     response.setStatus(acquirerResponse.getAuthorized() ? AUTHORIZED : DECLINED);
     response.setCardNumberLastFour(getLastFour(paymentRequest.getCardNumber()));
     response.setCurrency(paymentRequest.getCurrency());
+    response.setAmount(paymentRequest.getAmount());
     var date = paymentRequest.getExpiryDate().split("/");
     response.setExpiryMonth(parseInt(date[0]));
     response.setExpiryYear(parseInt(date[1]));

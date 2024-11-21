@@ -2,7 +2,6 @@ package com.checkout.payment.gateway.client;
 
 import org.springframework.web.client.RestTemplate;
 
-
 public abstract class BaseClient {
 
   protected final RestTemplate restTemplate;
@@ -28,10 +27,7 @@ public abstract class BaseClient {
       Class<T> responseType,
       Object... uriVariables) {
     return restTemplate.postForObject(
-        baseUri + ":" + port + path,
-        request,
-        responseType,
-        uriVariables);
+        baseUri + ":" + port + path, request, responseType, uriVariables);
   }
 
   public void put(
@@ -39,6 +35,13 @@ public abstract class BaseClient {
       Object request,
       Object... uriVariables) {
     restTemplate.put(baseUri + ":" + port + path, request, uriVariables);
+  }
+
+  public void delete(
+      String path,
+      Object request,
+      Object... uriVariables) {
+    restTemplate.delete(baseUri + ":" + port + path, request, uriVariables);
   }
 
 }
